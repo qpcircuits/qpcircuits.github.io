@@ -1,0 +1,918 @@
+<!doctype html>
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="keywords" content="量子">
+	<meta name="description">
+	<title>第五届集成光量子信息技术青年学术论坛</title>
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+	<link rel="stylesheet" href="cstyle.css">
+	<script src="focus.js" type="text/javascript"></script>
+	<script src="background.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(function () {
+			var language = "";
+				
+				language = "zh-cn";
+				
+
+				
+				if (language != "zh-cn") {
+					$("#hidCulture").val(language);
+					$("#frmCulture").submit();
+				}
+				
+		});
+	</script>
+</head>
+<body>
+<script>
+	$(function () {
+		if (undefined != $("#focus2")) {
+			var sWidth = $("#focus2").width(); //获取焦点图的宽度（显示面积）
+			var len = $("#focus2 ul li").length; //获取焦点图个数
+			var index = 0;
+			var picTimer;
+
+			//以下代码添加数字按钮和按钮后的半透明条，还有上一页、下一页两个按钮
+			var btn = "<div class='btnBg'></div><div class='btn'>";
+			for (var index = 0; index < len; index++) {
+				var num = index + 1
+				btn += "<span style='color:white'>" + "<p style='color:#000'>" + num + "</p>" + "</span>";
+			}
+			btn += "</div><div class='preNext pre'></div><div class='preNext next'></div>";
+			$("#focus2").append(btn);
+			$("#focus2").append('<div class="num">' + '</div>');
+
+			//为小按钮添加鼠标滑入事件，以显示相应的内容
+			$("#focus2 .btn span").css("opacity", 0.4).mouseenter(function () {
+				index = $("#focus2 .btn span").index(this);
+				showPics(index);
+			}).eq(0).trigger("mouseenter");
+
+			//上一页、下一页按钮透明度处理
+			$("#focus2 .preNext").css("opacity", 0.2).hover(function () {
+				$(this).stop(true, false).animate({ "opacity": "0.5" }, 100);
+			}, function () {
+				$(this).stop(true, false).animate({ "opacity": "0.2" }, 300);
+			});
+
+			//上一页按钮
+			$("#focus2 .pre").click(function () {
+				index -= 1;
+				if (index == -1) { index = len - 1; }
+				showPics(index);
+			});
+
+			//下一页按钮
+			$("#focus2 .next").click(function () {
+				index += 1;
+				if (index == len) { index = 0; }
+				showPics(index);
+			});
+
+			//本例为左右滚动，即所有li元素都是在同一排向左浮动，所以这里需要计算出外围ul元素的宽度
+			$("#focus2 ul").css("width", sWidth * (len));
+
+			//鼠标滑上焦点图时停止自动播放，滑出时开始自动播放
+			$("#focus2").hover(function () {
+				clearInterval(picTimer);
+			}, function () {
+				picTimer = setInterval(function () {
+					showPics(index);
+					index++;
+					if (index == len) { index = 0; }
+				}, 5000); //此4000代表自动播放的间隔，单位：毫秒
+			}).trigger("mouseleave");
+
+			//显示图片函数，根据接收的index值显示相应的内容
+			function showPics(index) { //普通切换
+				var nowLeft = -index * sWidth; //根据index值计算ul元素的left值
+				$("#focus2 ul").stop(true, false).animate({ "left": nowLeft }, 300); //通过animate()调整ul元素滚动到计算出的position
+				$("#focus2 .btn span").stop(true, false).animate({ "opacity": "0.4" }, 300).eq(index).stop(true, false).animate({ "opacity": "1" }, 300); //为当前的按钮切换到选中的效果
+			}
+		}
+
+		//Top
+		var id = "20200730-CFMT-9D2CB20F";
+		var curl = "/Utility/GetConferenceData" + "/" + id;
+		$.get(curl, null, function (data, textStatus, jqXHR) {
+			if (data.result == "success") {
+				if ("False" == "True") {
+					$("#m-time").html("")
+					if (!data.data.allowEntry) {
+						if (data.data.betweenDays < 0) {
+							$("#m-time").append("<p><span>会议已结束</span></p>")
+						} else if (data.data.betweenDays >= 0) {
+							var topMessage = "距离开幕还有{0}天";
+							if ("False" == "True") {
+								if (data.data.betweenDays < 10) {
+									topMessage = topMessage.replace(/\{0\}/g, '<span style="position: absolute;left: -51px;top: 7px;">' + data.data.betweenDays + '</span>');
+								}
+								else if (data.data.betweenDays < 100 && data.data.betweenDays > 9) {
+									topMessage = topMessage.replace(/\{0\}/g, '<span style="position: absolute;left: -60px;top: 7px;">' + data.data.betweenDays + '</span>');
+								}
+								else {
+									topMessage = topMessage.replace(/\{0\}/g, '<span style="position: absolute;left: -71px;top: 7px;">' + data.data.betweenDays + '</span>');
+								}
+								$("#m-time").append('<p style="text-align: left;width: 200px;position: relative;left: 67px;line-height: 18px; top: 4px; font-size:16px">' + topMessage + '</p>')
+							} else {
+								topMessage = topMessage.replace(/\{0\}/g, "<span>" + data.data.betweenDays + "</span>");
+								$("#m-time").append("<p>" + topMessage + "</p>")
+							}
+						}
+					} else {
+						$("#m-time").append("<p><span>会议正在举行</span></p>")
+					}
+				} else {
+					$("#m-time").css("display", "none");
+				}
+
+					
+					$("#m-rButton").attr("onclick", "top.location.href='http://www.htcis.net/MeetingAttendence/Index?conferenceId=20200730-CFMT-9D2CB20F'");
+					$("#m-cButton").attr("onclick", "top.location.href='http://www.htcis.net/MeetingContribute/Index?conferenceId=20200730-CFMT-9D2CB20F'");
+					$("#m-hButton").attr("onclick", "top.location.href='http://www.htcis.net/MeetingBooking/Index?conferenceId=20200730-CFMT-9D2CB20F'");
+					
+
+				if (!data.data.allowRegister || !data.data.hasRegister) {
+					$("#m-rButton").css("background", "#d4d4d4")
+					$("#m-rButton").css("cursor", "default")
+					$("#m-rButton").attr("diabled", true)
+					$("#m-rButton").removeAttr("onclick")
+				} else {
+						
+						background.setBackgroundAndOpacity($("#m-rButton"), "#4d1055", 1);
+						$("#m-rButton").hover(function () {
+							background.setBackgroundAndOpacity($("#m-rButton"), "#4d1055", 0.5);
+						}, function () {
+							background.setBackgroundAndOpacity($("#m-rButton"), "#4d1055", 1);
+						});
+						
+				}
+
+				if (!data.data.allowContribute || !data.data.hasContribute) {
+					$("#m-cButton").css("background", "#d4d4d4")
+					$("#m-cButton").css("cursor", "default")
+					$("#m-cButton").attr("diabled", true)
+					$("#m-cButton").removeAttr("onclick")
+				} else {
+						
+						background.setBackgroundAndOpacity($("#m-cButton"), "#4d1055", 1);
+						$("#m-cButton").hover(function () {
+							background.setBackgroundAndOpacity($("#m-cButton"), "#4d1055", 0.5);
+						}, function () {
+							background.setBackgroundAndOpacity($("#m-cButton"), "#4d1055", 1);
+						});
+						
+				}
+
+				var type = 0;
+				var span = "";
+				if (data.data.allowHotel && data.data.allowTraffic) {
+					type = 1;
+					span = "酒店交通";
+				} else if (data.data.allowHotel) {
+					type = 2;
+					span = "酒店";
+				} else if (data.data.allowTraffic) {
+					type = 3;
+					span = "交通";
+				} else {
+					$("#m-hButton").hide()
+				}
+				$("#m-hButton").val(span)
+
+				if (!data.data.allowRegister) {
+					$("#m-hButton").css("background", "#d4d4d4")
+					$("#m-hButton").css("cursor", "default")
+					$("#m-hButton").attr("diabled", true)
+					$("#m-hButton").removeAttr("onclick")
+				} else if (type == 1 && !data.data.hasHotel && !data.data.hasTraffic) {
+					$("#m-hButton").css("background", "#d4d4d4")
+					$("#m-hButton").css("cursor", "default")
+					$("#m-hButton").attr("diabled", true)
+					$("#m-hButton").removeAttr("onclick")
+				} else if (type == 2 && !data.data.hasHotel) {
+					$("#m-hButton").css("background", "#d4d4d4")
+					$("#m-hButton").css("cursor", "default")
+					$("#m-hButton").attr("diabled", true)
+					$("#m-hButton").removeAttr("onclick")
+				} else if (type == 3 && !data.data.hasTraffic) {
+					$("#m-hButton").css("background", "#d4d4d4")
+					$("#m-hButton").css("cursor", "default")
+					$("#m-hButton").attr("diabled", true)
+					$("#m-hButton").removeAttr("onclick")
+				} else {
+						
+						background.setBackgroundAndOpacity($("#m-hButton"), "#4d1055", 1);
+						$("#m-hButton").hover(function () {
+							background.setBackgroundAndOpacity($("#m-hButton"), "#4d1055", 0.5);
+						}, function () {
+							background.setBackgroundAndOpacity($("#m-hButton"), "#4d1055", 1);
+						});
+						
+				}
+			}
+		});
+
+		var menuFontColor = "#ffffff";
+			
+			menuFontColor = "#ffffff"
+			
+
+		//Menu
+		$("#m-menu").html("");
+		var m_url = "/Utility/GetLevelOneMenu" + "/" + "20200730-CFMT-9D2CB20F";
+		$.get(m_url, null, function (data, textStatus, jqXHR) {
+			if (data.length > 0) {
+				var len = 0
+				for (var index = 0; index < data.length; index++) {
+					var mId = data[index].id
+					var html = ""
+					if (data[index].link != "") {
+						html = '<li class="l1" id="li_' + mId + '"><a id="menu_' + mId + '" href="' + data[index].link + '" target="_blank" style="color:' + menuFontColor + '">' + data[index].menuName + '</a>'
+							+ '<div class="hid"><ul id="menu2' + mId + '"></ul></div></li>'
+					} else {
+						html = '<li class="l1" id="li_' + mId + '"><span id="menu_' + mId + '" style="color:' + menuFontColor + '">' + data[index].menuName + '</span>'
+							+ '<div class="hid"><ul id="menu2' + mId + '"></ul></div></li>'
+					}
+					$("#m-menu").append(html)
+					len += $("#li_" + mId).innerWidth();
+
+					$("#menu2" + mId).html("")
+					var m2_url = "/Utility/GetLevelTwoMenu?id=" + "20200730-CFMT-9D2CB20F" + "&menuId=" + mId;
+					$.get(m2_url, null, function (tdata, textStatus, jqXHR) {
+						if (tdata.length > 0) {
+							for (var subindex = 0; subindex < tdata.length; subindex++) {
+								var mhtml = ""
+								if (tdata[subindex].link != "") {
+									mhtml = '<li class="l2"><a id="submenu_' + subindex + '" href="' + tdata[subindex].link + '" target="_blank" style="color:' + menuFontColor + '">' + tdata[subindex].menuName + '</a></li>'
+								} else {
+									mhtml = '<li class="l2"><span id="submenu_' + subindex + '" style="color:' + menuFontColor + '">' + tdata[subindex].menuName + '</span></li>'
+								}
+								$("#menu2" + tdata[subindex].menuId).append(mhtml)
+							}
+						}
+					});
+				}
+
+				background.setOnResize();
+
+					
+					background.setBackgroundAndOpacity($(".top"), "#4c4948", 1 - Number("0.0"));
+					$(".l1").hover(function () {
+						background.setBackgroundAndOpacity(this, "#4c4948", 0.9 - Number("0.0"));
+						background.setBackgroundAndOpacity($(".hid"), "#4c4948", 1 - Number("0.0") * (0.1 + Number("0.0")));
+
+						$(".l2 a").hover(function () {
+							jQuery(this).css({ "text-decoration": "underline" });
+						}, function () {
+							jQuery(this).css({ "text-decoration": "none" });
+						});
+					}, function () {
+						background.setBackgroundAndOpacity($(this), "#4c4948", 0);
+					});
+					
+			}
+		});
+
+		//NewsList Mid
+		$("#centerNewsList").html("");
+		var n_url = "/MeetingMain/GetCenterNewsList" + "/" + "20200730-CFMT-9D2CB20F";
+		$.get(n_url, null, function (data, textStatus, jqXHR) {
+			if (data.length > 0) {
+				for (var nindex = 0; nindex < data.length; nindex++) {
+					var html = '<div class="box" id="b' + data[nindex].id + '">'
+						+ '<div class="tit">'
+						+ '<div class="ft">'
+						+ '<div class="l" id="l' + data[nindex].id + '">' + data[nindex].newsListName + '</div>'
+						+ '<div class="r" id="r' + data[nindex].id + '"><a id="a' + data[nindex].id + '">more&raquo;</a></div>'
+						+ '</div>'
+						+ '<div class="ln"><span class="c1" id="c' + data[nindex].id + '"></span><span class="c2"></span></div>'
+						+ '<div class="clear"></div>'
+						+ '</div>'
+						+ '<div class="list">'
+						+ '<div id="newsMiddle' + data[nindex].id + '" class="l2">'
+						+ '<ul id="midNews' + data[nindex].id + '"></ul>'
+						+ '</div>'
+						+ '</div>'
+						+ '</div>'
+
+					$("#centerNewsList").append(html)
+
+					if (data[nindex].backgroundColor != null && data[nindex].backgroundColor != "") {
+						background.setBackgroundAndOpacity($("#b" + data[nindex].id), data[nindex].backgroundColor, 1 - Number(data[nindex].backgroundOpacity));
+					} else {
+						background.setBackgroundAndOpacity($("#b" + data[nindex].id), "#ffffff", 0);
+					}
+
+					$("#l" + data[nindex].id).css({
+						"font-size": data[nindex].fontSize,
+						"font-weight": data[nindex].fontWeight,
+						"font-style": data[nindex].fontStyle,
+						"color": data[nindex].fontColor
+					});
+
+					if (data[nindex].isShowMore == false) {
+						$("#r" + data[nindex].id).css("display", "none");
+					}
+
+					if (data[nindex].moreColor != null && data[nindex].moreColor != "") {
+						$("#a" + data[nindex].id).css("color", data[nindex].moreColor);
+					} else {
+						$("#a" + data[nindex].id).css("color", "#8f8f8f");
+					}
+
+					if (data[nindex].lineColor != null && data[nindex].lineColor != "") {
+						$("#c" + data[nindex].id).css("background", data[nindex].lineColor);
+					} else {
+						$("#c" + data[nindex].id).css("background", "#c30d23");
+					}
+
+					$("#a" + data[nindex].id).attr("href", "/MeetingNewsList/Index" + "/" + data[nindex].id)
+					$("#a" + data[nindex].id).attr("target", "_blank")
+					$("#midNews" + data[nindex].id).html("")
+
+					var n2_url = "/Utility/GetNews?id=" + "20200730-CFMT-9D2CB20F" + "&newslistId=" + data[nindex].id;
+					$.get(n2_url, null, function (ndata, textStatus, jqXHR) {
+						if (ndata.length > 0) {
+							for (var j = 0; j < ndata.length; j++) {
+								if (j <= 4) {
+									var midNewsId = ndata[j].id
+									//有图
+									//图+标题+时间+摘要
+									var ptda_html = '<li id="ptda_mid' + midNewsId + '" class="pic c1">'
+									+ '<a id="ptda_midp' + midNewsId + '"><img src="' + "/Utility/NewsSimpleImg?id=" + midNewsId + '" /><div class="l">'
+									+ '<h3>' + ndata[j].newsTitle + '</h3>'
+									+ '<h5 style="color:#b4b4b4">' + ndata[j].abstract + '</h5></div></a>'
+									+ '<span class="t">' + ndata[j].createDate + '</span><div class="clear"></div></li>'
+
+									//图+标题
+									var pt_html = '<li id="pt_mid' + midNewsId + '" class="pic c1">'
+									+ '<a id="pt_midp' + midNewsId + '"><img src="' + "/Utility/NewsSimpleImg?id=" + midNewsId + '" />'
+									+ '<span class="l">' + ndata[j].newsTitle + '</span></a>'
+									+ '<span class="t"></span><div class="clear"></div></li>'
+
+									//图
+									var p_html = '<li id="p_mid' + midNewsId + '" >'
+									+ '<a id="p_midp' + midNewsId + '"><img style="max-width: 620px" src="' + "/Utility/NewsSimpleImg?id=" + midNewsId + '" />'
+									+ '</a>'
+									+ '</li>'
+
+									//无图
+									//标题+时间
+									var tt_html = '<li id="tt_mid' + midNewsId + '" class="c1"><a id="tt_midp' + midNewsId + '"><span class="l">' + ndata[j].newsTitle + '</span></a><span class="t">' + ndata[j].createDate + '</span><div class="clear"></div></li>'
+
+									//标题
+									var t_html = '<li id="t_mid' + midNewsId + '" class="c1"><a id="t_midp' + midNewsId + '"><span class="l">' + ndata[j].newsTitle + '</span></a><span class="t"></span><div class="clear"></div></li>'
+
+									//正文
+									var s_html = '<li id="s_mid' + midNewsId + '"><span id="s_midp' + midNewsId + '">' + ndata[j].mainText + '</span></li>'
+
+									var newsListID = ndata[j].newsListId
+
+									var newsStyle = ndata[j].newsStyle
+
+									if (newsStyle == "图+标题+时间+摘要（有字数限制）") {
+										$("#midNews" + newsListID).append(ptda_html)
+										if (j % 2 != 0) {
+											$("#ptda_mid" + midNewsId).removeClass("pic c1").addClass("pic")
+										}
+
+										$("#ptda_midp" + midNewsId).attr("href", ndata[j].link)
+										$("#ptda_midp" + midNewsId).attr("target", "_blank")
+									} else if (newsStyle == "图+标题") {
+										$("#midNews" + newsListID).append(pt_html)
+										if (j % 2 != 0) {
+											$("#pt_mid" + midNewsId).removeClass("pic c1").addClass("pic")
+										}
+
+										$("#pt_midp" + midNewsId).attr("href", ndata[j].link)
+										$("#pt_midp" + midNewsId).attr("target", "_blank")
+									} else if (newsStyle == "图") {
+										$("#newsMiddle" + newsListID).removeClass("l2").addClass("l4")
+										$("#midNews" + newsListID).append(p_html)
+										$("#p_midp" + midNewsId).attr("href", ndata[j].link)
+										$("#p_midp" + midNewsId).attr("target", "_blank")
+									} else if (newsStyle == "标题+时间") {
+										$("#newsMiddle" + newsListID).removeClass("l2").addClass("l1")
+										$("#midNews" + newsListID).append(tt_html)
+										if (j % 2 != 0) {
+											$("#tt_mid" + midNewsId).removeClass("c1")
+										}
+
+										$("#tt_midp" + midNewsId).attr("href", ndata[j].link)
+										$("#tt_midp" + midNewsId).attr("target", "_blank")
+
+									} else if (newsStyle == "标题") {
+										$("#newsMiddle" + newsListID).removeClass("l2").addClass("l1")
+										$("#midNews" + newsListID).append(t_html)
+										if (j % 2 != 0) {
+											$("#t_mid" + midNewsId).removeClass("c1")
+										}
+
+										$("#t_midp" + midNewsId).attr("href", ndata[j].link)
+										$("#t_midp" + midNewsId).attr("target", "_blank")
+									} else if (newsStyle == "正文") {
+										$("#newsMiddle" + newsListID).removeClass("l2").addClass("l3")
+										$("#midNews" + newsListID).append(s_html)
+									} else {
+										console.log("newsStyle有问题")
+									}
+								}
+							}
+						}
+					});
+				}
+			}
+		});
+
+		//NewsList Right
+		$("#rightNewsList").html("")
+		var r_url = "/MeetingMain/GetRightNewsList" + "/" + "20200730-CFMT-9D2CB20F";
+		$.get(r_url, null, function (data, textStatus, jqXHR) {
+			if (data.length > 0) {
+				for (var r = 0; r < data.length; r++) {
+					var html = '<div class="box" id="b' + data[r].id + '">'
+						+ '<div class="tit">'
+						+ '<div class="ft">'
+						+ '<div class="l" id="l' + data[r].id + '" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">' + data[r].newsListName + '</div>'
+						+ '<div class="r" id="r' + data[r].id + '"><a id="a' + data[r].id + '">more&raquo;</a></div>'
+						+ '</div>'
+						+ '<div class="ln"><span class="c1" id="c' + data[r].id + '" ></span><span class="c2"></span></div>'
+						+ '<div class="clear"></div>'
+						+ '</div>'
+						+ '<div id="rlist' + data[r].id + '">'
+						+ '<ul id="rightNews' + data[r].id + '">'
+						+ '</ul>'
+						+ '</div>'
+						+ '</div>'
+
+					$("#rightNewsList").append(html)
+
+					if (data[r].backgroundColor != null && data[r].backgroundColor != "") {
+						background.setBackgroundAndOpacity($("#b" + data[r].id), data[r].backgroundColor, 1 - Number(data[r].backgroundOpacity));
+					} else {
+						background.setBackgroundAndOpacity($("#b" + data[r].id), "#ffffff", 0);
+					}
+
+					$("#l" + data[r].id).css({
+						"font-size": data[r].fontSize,
+						"font-weight": data[r].fontWeight,
+						"font-style": data[r].fontStyle,
+						"color": data[r].fontColor
+					});
+
+					if (data[r].isShowMore == false) {
+						$("#r" + data[r].id).css("display", "none");
+					}
+
+					if (data[r].moreColor != null && data[r].moreColor != "") {
+						$("#a" + data[r].id).css("color", data[r].moreColor);
+					} else {
+						$("#a" + data[r].id).css("color", "#8f8f8f");
+					}
+
+					if (data[r].lineColor != null && data[r].lineColor != "") {
+						$("#c" + data[r].id).css("background", data[r].lineColor);
+					} else {
+						$("#c" + data[r].id).css("background", "#c30d23");
+					}
+
+					$("#a" + data[r].id).attr("href", "/MeetingNewsList/Index" + "/" + data[r].id)
+					$("#a" + data[r].id).attr("target", "_blank")
+
+					$("#rightNews" + data[r].id).html("")
+
+					var r2_url = "/Utility/GetNews?id=" + "20200730-CFMT-9D2CB20F" + "&newslistId=" + data[r].id;
+					$.get(r2_url, null, function (rdata, textStatus, jqXHR) {
+						if (rdata.length > 0) {
+							for (var k = 0; k < rdata.length; k++) {
+								if (k <= 4) {
+									var rightNewsId = rdata[k].id;
+									var rightNewsListId = rdata[k].newsListId;
+
+									//图+标+时间+摘要
+									var ptad_rightHtml = '<li><a id="ptad_right' + rightNewsId + '">'
+									+ '<p><img style="width:200px" src="' + "/Utility/NewsSimpleImg?id=" + rightNewsId + '" /></p>'
+									+ '<p>' + rdata[k].newsTitle + '</p>'
+									+ '<p>' + rdata[k].abstract + '</p>'
+									+ '<p style="color:#b4b4b4">' + rdata[k].createDate + '</p>'
+									+ '</a></li>'
+
+									//图+标题
+									var pt_rightHtml = '<li><a id="pt_right' + rightNewsId + '">'
+									+ '<p><img style="width:200px" src="' + "/Utility/NewsSimpleImg?id=" + rightNewsId + '" /></p>'
+									+ '<p>' + rdata[k].newsTitle + '</p>'
+									+ '</a></li>'
+
+									//图
+									var p_rightHtml = '<li><a id="p_right' + rightNewsId + '">'
+									+ '<p><img style="width:200px" src="' + "/Utility/NewsSimpleImg?id=" + rightNewsId + '" /></p>'
+									+ '</a></li>'
+
+									//标题+时间
+									var tt_rightHtml = '<li><a id="tt_right' + rightNewsId + '" >' + rdata[k].newsTitle + '<span style="float:right; color:#b4b4b4">' + rdata[k].createDate + '</span></a></li>'
+
+									//标题
+									var t_rightHtml = '<li><a id="t_right' + rightNewsId + '">' + rdata[k].newsTitle + '</a></li>'
+
+									//正文
+									var s_rightHtml = '<li><span id="s_right' + rightNewsId + '" style="word-break:break-all; width:150px;">' + rdata[k].mainText + '</span></li>'
+
+									var newsStyle = rdata[k].newsStyle
+
+									if (newsStyle == "图+标题+时间+摘要（有字数限制）") {
+										$("#rightNews" + rightNewsListId).append(ptad_rightHtml)
+										$("#ptad_right" + rightNewsId).attr("href", rdata[k].link)
+										$("#ptad_right" + rightNewsId).attr("target", "_blank")
+									} else if (newsStyle == "图+标题") {
+										$("#rightNews" + rightNewsListId).append(pt_rightHtml)
+										$("#pt_right" + rightNewsId).attr("href", rdata[k].link)
+										$("#pt_right" + rightNewsId).attr("target", "_blank")
+									} else if (newsStyle == "图") {
+										$("#rightNews" + rightNewsListId).append(p_rightHtml)
+										$("#p_right" + rightNewsId).attr("href", rdata[k].link)
+										$("#p_right" + rightNewsId).attr("target", "_blank")
+									} else if (newsStyle == "标题+时间") {
+										$("#rightNews" + rightNewsListId).append(tt_rightHtml)
+										$("#rlist" + rightNewsListId).removeClass("txt02").addClass("txt")
+										$("#tt_right" + rightNewsId).attr("href", rdata[k].link)
+										$("#tt_right" + rightNewsId).attr("target", "_blank")
+									} else if (newsStyle == "标题") {
+										$("#rightNews" + rightNewsListId).append(t_rightHtml)
+										$("#rlist" + rightNewsListId).removeClass("txt02").addClass("txt")
+										$("#t_right" + rightNewsId).attr("href", rdata[k].link)
+										$("#t_right" + rightNewsId).attr("target", "_blank")
+									} else if (newsStyle == "正文") {
+										$("#rightNews" + rightNewsListId).append(s_rightHtml)
+										$("#rlist" + rightNewsListId).removeClass("txt02").addClass("txt04")
+									} else {
+										console.log("newsStyle有问题")
+									}
+								}
+							}
+						}
+					});
+				}
+			}
+		});
+
+			
+			background.setBackgroundAndOpacity($(".container"), "#ffffff", 1 - Number("0.0"));
+			
+
+			
+			background.setBackgroundAndOpacity($(".top"), "#4c4948", 1 - Number("0.0"));
+			
+
+			
+			background.setBackgroundAndOpacity($(".lbox"), "#ffffff", 1 - Number("0.0"));
+			
+
+			
+			background.setBackgroundAndOpacity($(".mbox"), "#ffffff", 1 - Number("0.0"));
+			
+
+			
+			background.setBackgroundAndOpacity($(".rbox"), "#ffffff", 1 - Number("0.0"));
+			
+	});
+
+	window.onresize = function () {
+		background.setOnResize();
+	}
+</script>
+
+<div style="position:relative;z-index:999;width:100%;">
+	<!-- banner start -->
+	<div class="banner">
+		<img id="titleBanner" src="./img/banner.jpg">
+		<div class="mar"><div class="time" id="m-time" style="display: none;"></div></div>
+	</div>
+	<!-- banner end -->
+	<div class="container" style="background: rgb(255, 255, 255);">
+		<div id="divImg">
+			<!-- menu start -->
+			<div class="top" style="background: rgb(76, 73, 72);">
+				<div class="main" style="left: 62.5px;">
+					<div class="nav_bar">
+						<ul id="m-menu"><li class="l1" id="li_20200730-MNIF-2EAE53C2"><a id="menu_20200730-MNIF-2EAE53C2" href="http://qpcircuits.htcis.net/" target="_blank" style="color:#ffffff">首页</a><div class="hid" style="width: 1325px; left: -62.5px; background: rgb(76, 73, 72);"><ul id="menu220200730-MNIF-2EAE53C2"></ul></div></li><li class="l1" id="li_20200730-MNIF-E9567B8C"><a id="menu_20200730-MNIF-E9567B8C" href="http://www.htcis.net/MeetingNewsInfo/Index/20200910-NSIF-CF7C2834" target="_blank" style="color:#ffffff">组织机构</a><div class="hid" style="width: 1325px; left: -62.5px; background: rgb(76, 73, 72);"><ul id="menu220200730-MNIF-E9567B8C"></ul></div></li><li class="l1" id="li_20200730-MNIF-0D4D4C64" style="background: rgba(76, 73, 72, 0);"><a id="menu_20200730-MNIF-0D4D4C64" href="http://www.htcis.net/MeetingNewsInfo/Index/20201029-NSIF-812569B7" target="_blank" style="color:#ffffff">邀请报告</a><div class="hid" style="width: 1325px; left: -62.5px; background: rgb(76, 73, 72);"><ul id="menu220200730-MNIF-0D4D4C64"></ul></div></li><li class="l1" id="li_20200730-MNIF-E1E2C476"><a id="menu_20200730-MNIF-E1E2C476" href="http://www.htcis.net/MeetingNewsInfo/Index/20201031-NSIF-058058CD" target="_blank" style="color:#ffffff">会议日程</a><div class="hid" style="width: 1325px; left: -62.5px; background: rgb(76, 73, 72);"><ul id="menu220200730-MNIF-E1E2C476"></ul></div></li><li class="l1" id="li_20200730-MNIF-09636F92" style="background: rgba(76, 73, 72, 0);"><a id="menu_20200730-MNIF-09636F92" href="http://www.htcis.net/MeetingNewsInfo/Index/20200910-NSIF-411AF31B" target="_blank" style="color:#ffffff">投稿说明</a><div class="hid" style="width: 1325px; left: -62.5px; background: rgb(76, 73, 72);"><ul id="menu220200730-MNIF-09636F92"></ul></div></li><li class="l1" id="li_20200730-MNIF-393984A5"><a id="menu_20200730-MNIF-393984A5" href="http://www.htcis.net/MeetingNewsInfo/Index/20201012-NSIF-4D98D23D" target="_blank" style="color:#ffffff">注册说明</a><div class="hid" style="width: 1325px; left: -62.5px; background: rgb(76, 73, 72);"><ul id="menu220200730-MNIF-393984A5"></ul></div></li><li class="l1" id="li_20200910-MNIF-B1D00373"><a id="menu_20200910-MNIF-B1D00373" href="http://www.htcis.net/MeetingNewsInfo/Index/20201031-NSIF-09462A32" target="_blank" style="color:#ffffff">酒店交通</a><div class="hid" style="width: 1325px; left: -62.5px; background: rgb(76, 73, 72);"><ul id="menu220200910-MNIF-B1D00373"></ul></div></li></ul>
+					</div>
+				</div>
+			</div>
+			<!-- menu end -->
+			<div class="mar">
+				<div class="tem02">
+					<!-- middle start -->
+					<div class="mbox fl" style="margin-right: 15px; background: rgb(255, 255, 255);">
+						<div class="c">
+							<!-- slide -->
+							<!-- slide end -->
+							<!-- about start -->
+							<!-- about end -->
+							<!-- list start -->
+							<div id="centerNewsList"><div class="box" id="b20200910-NLIF-425E98EF" style="background: rgba(255, 255, 255, 0);"><div class="tit"><div class="ft"><div class="l" id="l20200910-NLIF-425E98EF" style="font-size: 16px; font-weight: bold; font-style: normal; color: rgb(77, 16, 85);">会议介绍</div><div class="r" id="r20200910-NLIF-425E98EF" style="display: none;"><a id="a20200910-NLIF-425E98EF" href="/MeetingNewsList/Index/20200910-NLIF-425E98EF" target="_blank" style="color: rgb(143, 143, 143);">more»</a></div></div><div class="ln"><span class="c1" id="c20200910-NLIF-425E98EF" style="background: rgb(77, 16, 85);"></span><span class="c2"></span></div><div class="clear"></div></div><div class="list"><div id="newsMiddle20200910-NLIF-425E98EF" class="l3"><ul id="midNews20200910-NLIF-425E98EF"><li id="s_mid20200910-NSIF-965B812C"><span id="s_midp20200910-NSIF-965B812C"><p align="left" style="text-indent :24px">集成光量子信息技术青年学术论坛由中国科学技术大学郭光灿院士和南京大学祝世宁院士共同发起，旨在为从事集成光量子信息技术领域研究的青年学者搭建学术交流平台，促进我国集成光量子信息技术相关研究的发展，加速量子信息技术实用化进程。</p>
+
+<p align="left" style="text-indent :24px"><strong>第四届集成光量子信息技术青年学术论坛</strong>将于<strong>2020年12月18日至12 月20日在北京</strong>举行。 本次论坛主题包括：集成光量信息技术新原理，新方法和新应用、芯片上实现量子态产生，操控和探测的新技术、集成光学新材料和新机制等。</p>
+
+<p align="left" style="text-indent :24px">&nbsp;</p>
+
+<div style="float:left; width:600; height:280; padding-left:24px">
+<p><span style="color:#4d1055;"><strong>论坛主席</strong></span></p>
+
+<p>郭光灿院士，中国科学技术大学、祝世宁院士，南京大学</p>
+
+<p>&nbsp;</p>
+
+<p><span style="color:#4d1055;"><strong>论坛召集人</strong></span></p>
+
+<p>张巍，清华大学、孙方稳，中国科学技术大学、龚彦晓，南京大学</p>
+
+<p>&nbsp;</p>
+
+<p><span style="color:#4d1055;"><strong>地方会务组</strong></span></p>
+
+<p>张巍，清华大学、冯雪，清华大学</p>
+</div>
+
+<div style="float:left; width:300; height:280; padding-left:80px">
+<p><span style="color:#4d1055;"><strong>主办单位</strong></span></p>
+
+<p>清华大学电子工程系<br>
+<a href="http://www.ee.tsinghua.edu.cn/" target="_blank"><img alt="" src="./img/PNG_132526861620568581.png" style="width: 260px; height: 57px;"></a></p>
+
+<p>&nbsp;</p>
+
+<p><span style="color:#4d1055;"><strong>协办单位</strong></span></p>
+
+<p>清华大学天津电子信息研究院<br>
+<a href="http://www.tsinghua-ieit.com/" target="_blank"><span style="color:#4d1055;"><strong><img alt="" src="./img/PNG_132441765812585619.png" style="width: 240px; height: 34px;"></strong></span></a></p>
+</div></span></li></ul></div></div></div><div class="box" id="b20201009-NLIF-77E24C98" style="background: rgba(255, 255, 255, 0);"><div class="tit"><div class="ft"><div class="l" id="l20201009-NLIF-77E24C98" style="font-size: 16px; font-weight: bold; font-style: normal; color: rgb(77, 16, 82);">论坛日程</div><div class="r" id="r20201009-NLIF-77E24C98" style="display: none;"><a id="a20201009-NLIF-77E24C98" href="/MeetingNewsList/Index/20201009-NLIF-77E24C98" target="_blank" style="color: rgb(143, 143, 143);">more»</a></div></div><div class="ln"><span class="c1" id="c20201009-NLIF-77E24C98" style="background: rgb(77, 16, 82);"></span><span class="c2"></span></div><div class="clear"></div></div><div class="list"><div id="newsMiddle20201009-NLIF-77E24C98" class="l3"><ul id="midNews20201009-NLIF-77E24C98"><li id="s_mid20201031-NSIF-058058CD"><span id="s_midp20201031-NSIF-058058CD"><table border="1" cellpadding="0" cellspacing="0" height="48" style=" margin: auto" width="600">
+	<tbody>
+		<tr>
+			<td bgcolor="#4d1055" colspan="2" style="text-align: center;"><strong><span style="color:#ffffff;">12月18日</span></strong></td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;" width="90">9:00-19:00</td>
+			<td style="padding-left: 5px;" width="510">报到（辽宁大厦大堂）</td>
+		</tr>
+	</tbody>
+</table>
+
+<p style=" margin-left: 360px;">- 19、20日两天，会议期间也可以报到<br>
+- 请参会代表提前至会议系统完成在线注册。</p>
+
+<table border="1" cellpadding="0" cellspacing="0" style=" margin: auto" width="600">
+	<tbody>
+		<tr>
+			<td bgcolor="#4d1055" colspan="2" style="text-align: center;"><strong><span style="color:#ffffff;">12月19日</span></strong></td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;" width="90">8:45-9:00</td>
+			<td style="padding-left: 5px;" width="510">开幕式</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: center;">主持人：徐平，国防科技大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">9:00-9:30</td>
+			<td style="padding-left: 5px;">可集成固态量子存储器<br>
+			<strong>周宗权</strong>，中国科学技术大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">9:30-10:00</td>
+			<td style="padding-left: 5px;">光通信波段双光子态的频率-时间特性调控<br>
+			<strong>金锐博</strong>，武汉工程大学</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">10:00-10:30</td>
+			<td style="text-align: center;">合影，茶歇</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: center;">主持人：刘永椿，清华大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">10:30-11:00</td>
+			<td style="padding-left: 5px;">基于集成原子系综芯片的压缩增强磁力计<br>
+			<strong>申恒</strong>，山西大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">11:00-11:30</td>
+			<td style="padding-left: 5px;">非经典光源制备及在超表面量子边缘探测上的应用<br>
+			<strong>周志远</strong>，中国科学技术大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">11:30-12:00</td>
+			<td style="padding-left: 5px;">
+			<p>基于周期极化铌酸锂波导的量子频率转换及其应用<br>
+			<strong>张强</strong>，中国科学技术大学</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: center;">午餐</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: center;">主持人：胡小龙，天津大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">13:30-14:00</td>
+			<td style="padding-left: 5px;">基于量子点-光子晶体微腔的超快单光子开关<br>
+			<strong>刘峰</strong>，浙江大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">14:00-14:30</td>
+			<td style="padding-left: 5px;">Solid state sources for single photons with orbital angular momentum<br>
+			<strong>刘波</strong>，中山大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">14:30-15:00</td>
+			<td style="padding-left: 5px;">光量子芯片上的多光子纠缠产生<br>
+			<strong>徐平</strong>，国防科技大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; text-align: center;">15:00-16:30</td>
+			<td style="text-align: center;">张贴报告，茶歇</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: center;">主持人：金锐博，武汉工程大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">16:30-17:00</td>
+			<td style="padding-left: 5px;">应力调控混合集成光量子芯片<br>
+			<strong>张加祥</strong>，中科院上海微系统与信息技术研究所</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">17:00-17:30</td>
+			<td style="padding-left: 5px;">基于原子系综的高性能光隔离器<br>
+			<strong>刘永椿</strong>，清华大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">17:30-18:00</td>
+			<td style="padding-left: 5px;">Quantum computational advantage with photons<br>
+			<strong>陆朝阳</strong>，中国科学技术大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; text-align: center;">18:00-20:00</td>
+			<td style="text-align: center;">晚宴</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<table border="1" cellpadding="0" cellspacing="0" style=" margin: auto" width="600">
+	<tbody>
+		<tr>
+			<td bgcolor="#4d1055" colspan="2" style="text-align: center;"><span style="color:#ffffff;"><strong>12月20日</strong></span></td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: center;">主持人：任希锋，中国科学技术大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;" width="90">9:00-9:30</td>
+			<td style="padding-left: 5px;" width="510">超构透镜阵列研究<br>
+			<strong>王漱明</strong>，南京大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">9:30-10:00</td>
+			<td style="padding-left: 5px;">静态混合量子结点用于片上完美量子态传输<br>
+			<strong>陈学文</strong>，华中科技大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px;text-align: center;">10:00-10:30</td>
+			<td style="text-align: center;">茶歇</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: center;">主持人：陈学文，华中科技大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">10:30-11:00</td>
+			<td style="padding-left: 5px;">光量子成像技术和应用<br>
+			<strong>徐飞虎</strong>，中国科学技术大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">11:00-11:30</td>
+			<td style="padding-left: 5px;">基于光镊与光子晶体波导的单原子阵列组装<br>
+			<strong>秦忠忠</strong>，山西大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">11:30-12:00</td>
+			<td style="padding-left: 5px;">拓扑保护光量子芯片<br>
+			<strong>任希锋</strong>，中国科学技术大学</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: center;">午餐</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="text-align: center;">主持人，张巍，清华大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">13:30-14:00</td>
+			<td style="padding-left: 5px;">超导纳米线单光子探测器与多光子探测器<br>
+			<strong>胡小龙</strong>，天津大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">14:00-14:30</td>
+			<td style="padding-left: 5px;">周期极化铌酸锂微盘腔的制备及非线性光学应用<br>
+			<strong>薄方</strong>，南开大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; height: 50px; text-align: center;">14:30-15:00</td>
+			<td style="padding-left: 5px;">光子集成芯片上的拓扑量子保护<br>
+			<strong>金贤敏</strong>，上海交通大学</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 5px; text-align: center;">15:00-15:15</td>
+			<td style="text-align: center;">闭幕</td>
+		</tr>
+	</tbody>
+</table>
+
+<p style="text-align: center;">&nbsp;</p></span></li></ul></div></div></div></div>
+							<!-- list end -->
+						</div>
+						<div class="clear"></div>
+					</div>
+					<!-- middle end -->
+					<!-- left start -->
+					<div class="rbox fr" style="background: rgb(255, 255, 255);">
+						<!-- button start -->
+						<div class="button">
+							<input type="button" id="m-cButton" value="参会投稿" diabled="true" style="background: rgb(212, 212, 212); cursor: default;">
+							<input type="button" id="m-rButton" value="参会注册" diabled="true" style="background: rgb(212, 212, 212); cursor: default;">
+							<input type="button" id="m-hButton" value="" diabled="true" style="display: none; background: rgb(212, 212, 212); cursor: default;">
+						</div>
+						<!-- button end -->
+						<!-- colomn start -->
+						<div id="rightNewsList"><div class="box" id="b20200730-NLIF-56B42D45" style="background: rgba(255, 255, 255, 0);"><div class="tit"><div class="ft"><div class="l" id="l20200730-NLIF-56B42D45" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; font-weight: bold; font-style: normal; color: rgb(77, 16, 85);">重要日期</div><div class="r" id="r20200730-NLIF-56B42D45" style="display: none;"><a id="a20200730-NLIF-56B42D45" href="/MeetingNewsList/Index/20200730-NLIF-56B42D45" target="_blank" style="color: rgb(143, 143, 143);">more»</a></div></div><div class="ln"><span class="c1" id="c20200730-NLIF-56B42D45" style="background: rgb(77, 16, 85);"></span><span class="c2"></span></div><div class="clear"></div></div><div id="rlist20200730-NLIF-56B42D45" class="txt04"><ul id="rightNews20200730-NLIF-56B42D45"><li><span id="s_right20200730-NSIF-C85DA7A3" style="word-break:break-all; width:150px;"><p>&nbsp;</p>
+
+<table border="1" bordercolor="#4D1055" cellpadding="0" cellspacing="0" style="margin:auto" width="180">
+	<tbody>
+		<tr>
+			<td style="line-height: 30px; text-align: center;"><strong><span style="color:#4d1055;">摘要投稿截止</span></strong></td>
+		</tr>
+		<tr>
+			<td style="line-height:30px; text-align:center"><span style="font-size:16px;"><span style="color:#4d1055;"><s>10月30日</s></span></span><strong><span style="font-size:16px;"><span style="color:#4d1055;"> 11月15日</span></span></strong></td>
+		</tr>
+	</tbody>
+</table></span></li></ul></div></div><div class="box" id="b20200821-NLIF-2F77B7E0" style="background: rgba(255, 255, 255, 0);"><div class="tit"><div class="ft"><div class="l" id="l20200821-NLIF-2F77B7E0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; font-weight: bold; font-style: normal; color: rgb(77, 16, 85);">联系咨询</div><div class="r" id="r20200821-NLIF-2F77B7E0" style="display: none;"><a id="a20200821-NLIF-2F77B7E0" href="/MeetingNewsList/Index/20200821-NLIF-2F77B7E0" target="_blank" style="color: rgb(143, 143, 143);">more»</a></div></div><div class="ln"><span class="c1" id="c20200821-NLIF-2F77B7E0" style="background: rgb(77, 16, 85);"></span><span class="c2"></span></div><div class="clear"></div></div><div id="rlist20200821-NLIF-2F77B7E0" class="txt04"><ul id="rightNews20200821-NLIF-2F77B7E0"><li><span id="s_right20200821-NSIF-58DFB811" style="word-break:break-all; width:150px;"><p style="padding-left: 14px;line-height: 30px"><strong>邮箱</strong>：qpc2020@tsinghua.edu.cn</p>
+
+<p style="padding-left: 14px;line-height: 30px"><strong>电话</strong>：021-69918426</p>
+
+<p style="padding-left: 14px;line-height: 30px"><a href="/CKUploads/files/2020/11/PDF_132500776690631670.pdf" target="_blank">点击查看赞助方案</a></p></span></li></ul></div></div><div class="box" id="b20201030-NLIF-4700A93A" style="background: rgba(255, 255, 255, 0);"><div class="tit"><div class="ft"><div class="l" id="l20201030-NLIF-4700A93A" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; font-weight: bold; font-style: normal; color: rgb(77, 16, 85);">会议赞助</div><div class="r" id="r20201030-NLIF-4700A93A" style="display: none;"><a id="a20201030-NLIF-4700A93A" href="/MeetingNewsList/Index/20201030-NLIF-4700A93A" target="_blank" style="color: rgb(143, 143, 143);">more»</a></div></div><div class="ln"><span class="c1" id="c20201030-NLIF-4700A93A" style="background: rgb(77, 16, 85);"></span><span class="c2"></span></div><div class="clear"></div></div><div id="rlist20201030-NLIF-4700A93A" class="txt04"><ul id="rightNews20201030-NLIF-4700A93A"><li><span id="s_right20201030-NSIF-549C851B" style="word-break:break-all; width:150px;"><p style="text-align: center;padding-top: 14px;line-height: 60px"><a href="http://www.npilasers.com/" target="_blank"><img alt="" src="./img/PNG_132499876074246072.png" style="width: 150px; height: 57px;"></a></p>
+
+<p style="text-align: center;padding-top: 14px;line-height: 60px"><a href="https://www.toptica.com/zh/" target="_blank"><img alt="" src="./img/PNG_132485326505190401.png" style="width: 150px; height: 59px;"></a></p>
+
+<p style="text-align: center;line-height: 37px"><a href="https://www.dyna-sense.com/" target="_blank"><img alt="" src="./img/PNG_132485326693491177.png" style="width: 150px; height: 35px;"></a></p>
+
+<p style="text-align: center;line-height: 50px"><a href="http://www.spark-opt.com.cn/product-item-79.html" target="_blank"><img alt="" src="./img/PNG_132485326822397401.png" style="width: 150px; height: 40px;"></a></p>
+
+<p style="text-align: center;line-height: 77px"><a href="http://www.to-sun.com/" target="_blank"><img alt="" src="./img/PNG_132485326944965778.png" style="width: 150px; height: 77px;"></a></p>
+
+<p style="text-align: center;line-height: 41px"><a href="http://www.topphotonics.com/" target="_blank"><img alt="" src="./img/PNG_132485327099780418.png" style="width: 150px; height: 41px;"></a></p>
+
+<p style="text-align: center;line-height: 55px"><a href="http://www.etsc-tech.com/" target="_blank"><img alt="" src="./img/PNG_132485327334741439.png" style="width: 150px; height: 44px;"></a></p>
+
+<p style="text-align: center;line-height: 55px"><a href="https://www.lbtek.com/" target="_blank"><img alt="" src="./img/PNG_132495361811175674.png" style="width: 150px; height: 35px;"></a></p>
+
+<p style="text-align: center;line-height: 55px"><a href="https://www.newport.com.cn/" target="_blank"><img alt="" src="./img/JPG_132495362310544140.jpg" style="width: 150px; height: 58px;"></a></p>
+
+<p style="text-align: center;line-height: 55px"><a href="https://andor.oxinst.cn/" target="_blank"><img alt="" src="./img/PNG_132495362916319163.png" style="width: 150px; height: 44px;"></a></p>
+
+<p style="text-align: center;line-height: 55px"><a href="http://www.santec.com.cn/index.html" target="_blank"><img alt="" src="./img/PNG_132499874908198212.png" style="width: 150px; height: 50px;"></a></p>
+
+<p style="text-align: center;line-height: 55px"><a href="http://www.beijingec.com/" target="_blank"><img alt="" src="./img/PNG_132499875603789755.png" style="width: 150px; height: 57px;"></a></p>
+
+<p style="text-align: center;line-height: 55px"><a href="http://www.hchiptech.com/" target="_blank"><img alt="" src="./img/PNG_132511906514445886.png" style="width: 150px; height: 93px;"></a></p>
+
+<p style="text-align: center;line-height: 55px"><a href="http://www.pulsepower.cn/" target="_blank"><img alt="" src="./img/PNG_132511904482639120.png" style="width: 150px; height: 43px;"></a></p>
+
+<p style="text-align: center;line-height: 55px"><a href="http://www.lusterinc.com/" target="_blank"><img alt="" src="./img/PNG_132524962430158440.png" style="width: 150px; height: 31px;"></a></p>
+
+<p style="text-align: center;line-height: 55px"><a href="http://www.richysensing.com/" target="_blank"><img alt="" src="./img/PNG_132524962605754322.png" style="width: 150px; height: 47px;"></a></p>
+
+<p style="text-align: center;line-height: 55px"><a href="http://www.yslphotonics.com/" target="_blank"><img alt="" src="./img/PNG_132502373074903984.png" style="width: 150px; height: 22px;"></a></p>
+
+<p style="text-align: center;line-height: 55px">&nbsp;</p></span></li></ul></div></div></div>
+						<!-- colomn end -->
+					</div>
+					<!-- left end -->
+					<div class="clear"></div>
+				</div>
+			</div>
+			<!-- footer start -->
+			<!--<div class="footer">
+				<p>©汇同会议系统版权归中国激光杂志社所有</p>
+				<p id="CopyRightId" style="margin-top:-70px">
+					<a href="https://www.miit.gov.cn" target="_blank" style="color:#999">沪ICP备15018463号-10 &nbsp;&nbsp;</a>
+					<a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011402005521" target="_blank" style="color:#999"><img src="/Images/police.png" style="position:relative; top:4px;">沪公网安备 31011402005521号</a>
+				</p>
+			</div>-->
+			<!-- footer end -->
+		</div>
+	</div>
+</div>	<form action="/Utility/SetCulture" id="frmCulture" method="post">		<input type="hidden" id="hidCulture" name="culture">
+</form>
+</body></html>
